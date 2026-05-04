@@ -22,6 +22,10 @@ defmodule BtreeTest do
                right: %Btree.Node{value: 15, left: nil, right: nil}
              }
     end
+
+    test "it returns an empty node when collecting an empty list" do
+      assert Enum.into([], %Node{}) == %Node{}
+    end
   end
 
   describe "sort/1" do
@@ -82,9 +86,20 @@ defmodule BtreeTest do
                  left: %Node{value: 5, right: %Node{value: 7}}
                }
     end
+
+    test "inserts duplicate values on the left branch" do
+      assert Btree.insert(%Node{value: 10}, 10) == %Node{
+               value: 10,
+               left: %Node{value: 10}
+             }
+    end
   end
 
   describe "search/2" do
+    test "it returns :not_found for an empty tree" do
+      assert Btree.search(nil, 123) == :not_found
+    end
+
     setup do
       tree = %Node{
         value: 43,
@@ -107,6 +122,14 @@ defmodule BtreeTest do
       assert Btree.search(tree, 456) == :not_found
     end
 
+    test "it returns :not_found when traversing the left branch", %{tree: tree} do
+      assert Btree.search(tree, 1) == :not_found
+    end
+
+    test "it returns :not_found when traversing the right branch", %{tree: tree} do
+      assert Btree.search(tree, 99) == :not_found
+    end
+
     test "it traverses the tree to return the correct node", %{tree: tree} do
       assert Btree.search(tree, 19) == %Node{
                value: 19,
@@ -117,6 +140,10 @@ defmodule BtreeTest do
   end
 
   describe "invert/1" do
+    test "it returns nil for an empty tree" do
+      assert Btree.invert(nil) == nil
+    end
+
     test "it inverts a binary tree" do
       tree = %Btree.Node{
         value: 2,
