@@ -1,6 +1,6 @@
 # Btree
 
-**TODO: Add description**
+This is just a practice repo where I implemented some functions to work with Binary Trees
 
 ## Installation
 
